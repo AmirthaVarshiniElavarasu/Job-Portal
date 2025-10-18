@@ -69,7 +69,9 @@ export default function CreateJobModal({ opened, onClose }) {
             onClose={onClose}
             centered
             size="lg"
-            title={<Text ta="center" fw={600}>Create Job Opening</Text>}
+            title={<Text fw={600} size="lg">Create Job Opening</Text>}
+            styles={{ title: { textAlign: 'center', width: '100%' } }}
+
             radius="md"
         >
             <Stack gap="md">
@@ -174,7 +176,7 @@ export default function CreateJobModal({ opened, onClose }) {
                     minRows={4}
                     autosize={false}
                     size="md"
-                    styles={{ input: { minHeight: 150 } }} 
+                    styles={{ input: { minHeight: 150 } }}
                     value={form.description}
                     onChange={(e) => handleChange('description', e.currentTarget.value)}
                     radius="md"
@@ -186,7 +188,7 @@ export default function CreateJobModal({ opened, onClose }) {
                         onClick={() => handleSubmit('Draft')}
                         radius="md"
                     >
-                        Save Draft
+                        Save Draft »
                     </Button>
                     <Button
                         color="blue"
