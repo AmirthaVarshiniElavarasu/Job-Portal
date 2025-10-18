@@ -10,7 +10,12 @@ export default function SearchBar({ onFilter }) {
     jobType: '',
     salaryRange: [20000, 100000],
   });
-
+  const formatSalary = (value) => {
+      if(value >=1000000) return (value /1000000).toFixed(1)+'C';
+      if (value >= 100000) return (value / 100000).toFixed(1) + 'L';
+      if (value >= 1000) return Math.round(value / 1000) + 'K';
+      return value.toString();
+    };
   const handleFilter = () => {
     onFilter(filters);
   };

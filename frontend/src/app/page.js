@@ -7,14 +7,14 @@ import CreateJobModal from './components/CreateJobModal';
 
 export default function Home() {
   const [filters, setFilters] = useState({});
-   const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useState(false);
   const handleFilter = (f) => {
     setFilters(f);
   };
 
   return (
     <>
-      <NavBar />
+      <NavBar onCreateJobClick={() => setOpened(true)} />
       <SearchBar onFilter={handleFilter} />
       <JobList filters={filters} />
       <CreateJobModal opened={opened} onClose={() => setOpened(false)} />
