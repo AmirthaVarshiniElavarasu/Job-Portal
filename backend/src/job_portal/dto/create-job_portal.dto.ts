@@ -1,4 +1,5 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateJobPortalDto {
   @IsString()
@@ -22,6 +23,10 @@ export class CreateJobPortalDto {
 
   @IsNumber()
   maxSalary: number;
+
+  @IsDate()
+  @Type(() => Date)
+  deadline: Date;
 
   @IsString()
   @IsNotEmpty()

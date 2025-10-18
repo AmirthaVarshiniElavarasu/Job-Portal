@@ -23,6 +23,9 @@ export class JobPortal {
   @Column({ type: 'numeric', nullable: false })
   maxSalary: number;
 
+  @Column({ type:'date', nullable: false})
+  deadline: Date;
+
   @Column({ type: 'text', nullable: false })
   description: string;
 

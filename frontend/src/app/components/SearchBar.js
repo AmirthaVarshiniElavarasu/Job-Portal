@@ -1,6 +1,14 @@
 'use client';
 import { useState } from 'react';
-import { TextInput, Group, Select, RangeSlider, Button } from '@mantine/core';
+import {
+  TextInput,
+  Group,
+  Select,
+  RangeSlider,
+  Button,
+  Box,
+  Text,
+} from '@mantine/core';
 import { IconSearch, IconMapPin, IconBriefcase } from '@tabler/icons-react';
 
 export default function SearchBar({ onFilter }) {
@@ -8,55 +16,103 @@ export default function SearchBar({ onFilter }) {
     title: '',
     location: '',
     jobType: '',
-    salaryRange: [20000, 100000],
+    salaryRange: [50000, 80000],
   });
-  const formatSalary = (value) => {
-      if(value >=1000000) return (value /1000000).toFixed(1)+'C';
-      if (value >= 100000) return (value / 100000).toFixed(1) + 'L';
-      if (value >= 1000) return Math.round(value / 1000) + 'K';
-      return value.toString();
-    };
+
   const handleFilter = () => {
     onFilter(filters);
   };
 
   return (
-    <Group justify="center" mt="md" gap="sm" wrap="wrap">
-      <TextInput
-        placeholder="Search by Job Title"
-        leftSection={<IconSearch size={16} />}
-        value={filters.title}
-        onChange={(e) => setFilters({ ...filters, title: e.target.value })}
-      />
+    <Box
+      maw={1400}
+      mx="auto"
+      mt="lg"
+      p="md"
+      style={{
+        backgroundColor: '#fff',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        boxShadow: '0px 8px 20px rgba(0, 0, 0, 0.1)',
+      }}
+    >
+      <Group
+        justify="center"
+        wrap="nowrap"
+        gap="md"
+        style={{
+          width: '100%',
+          alignItems: 'center',
+        }}
+      >
+        <TextInput
+        variant='unstyled'
+          placeholder="Search by Job Title, Role"
+          leftSection={<IconSearch size={18} />}
+          value={filters.title}
+          onChange={(e) => setFilters({ ...filters, title: e.target.value })}
+          radius="xl"
+          size="md"
+          style={{ flex: 1 }}
+        />
 
-      <TextInput
-        placeholder="Preferred Location"
-        leftSection={<IconMapPin size={16} />}
-        value={filters.location}
-        onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-      />
+        <Select
+        variant='unstyled'
+          placeholder="Preferred Location"
+          data={['Chennai', 'Bangalore', 'Hyderabad', 'Delhi', 'Remote']}
+          leftSection={<IconMapPin size={18} />}
+          value={filters.location}
+          onChange={(value) => setFilters({ ...filters, location: value })}
+          radius="xl"
+          size="md"
+          style={{ flex: 1 }}
+        />
 
-      <Select
-        placeholder="Job Type"
-        data={['Full-Time', 'Part-Time', 'Contract', 'Internship']}
-        leftSection={<IconBriefcase size={16} />}
-        value={filters.jobType}
-        onChange={(value) => setFilters({ ...filters, jobType: value })}
-      />
+        <Select
+        variant='unstyled'
+          placeholder="Job Type"
+          data={['Full-time', 'Part-time', 'Contract', 'Internship']}
+          leftSection={<IconBriefcase size={18} />}
+          value={filters.jobType}
+          onChange={(value) => setFilters({ ...filters, jobType: value })}
+          radius="xl"
+          size="md"
+          style={{ flex: 1 }}
+        />
 
-      <RangeSlider
-        min={10000}
-        max={200000}
-        step={5000}
-        label={(val) => `₹${val}`}
-        value={filters.salaryRange}
-        onChange={(value) => setFilters({ ...filters, salaryRange: value })}
-        style={{ width: 200 }}
-      />
+        <div>
+          <Text size="sm" fw={500} mb={4}>
+            Salary Per Month
+          </Text>
+          <RangeSlider
+            min={10000}
+            max={200000}
+            step={5000}
+            value={filters.salaryRange}
+            onChange={(value) => setFilters({ ...filters, salaryRange: value })}
+            color="black"
+            label={(val) => `₹${Math.round(val / 1000)}k`}
+            radius="xl"
+            size="sm"
+            styles={{
+              bar: { height: 6 },
+              thumb: { width: 16, height: 16 },
+            }}
+          />
+      </div>
 
-      <Button color="blue" onClick={handleFilter}>
-        Apply Filters
-      </Button>
-    </Group>
+        <Button
+          color="blue"
+          radius="xl"
+          size="md"
+          fw={600}
+          style={{ minWidth: 120 }}
+          onClick={handleFilter}
+        >
+          Apply Filters
+        </Button>
+      </Group>
+    </Box>
   );
 }
