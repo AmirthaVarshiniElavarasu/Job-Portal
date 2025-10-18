@@ -3,7 +3,7 @@ import { JobPortalService } from './job_portal.service';
 import { CreateJobPortalDto } from './dto/create-job_portal.dto';
 import { UpdateJobPortalDto } from './dto/update-job_portal.dto';
 
-@Controller('job-portal')
+@Controller('jobs')
 export class JobPortalController {
   constructor(private readonly jobPortalService: JobPortalService) {}
 
@@ -15,6 +15,11 @@ export class JobPortalController {
   @Get()
   findAll() {
     return this.jobPortalService.findAll();
+  }
+  
+  @Get('published')
+  findPublished() {
+  return this.jobPortalService.findPublished();
   }
 
   @Get(':id')
