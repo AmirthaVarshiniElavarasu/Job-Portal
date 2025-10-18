@@ -15,11 +15,11 @@ import { JobPortalModule } from './job_portal/job_portal.module';
       useFactory: async (configService: ConfigService)=> ({
         type: 'postgres',
         host: configService.get('DB_HOST'),
-        post: +configService.get('DB_PORT'),
+        port: +configService.get('DB_PORT'),
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [join[process.cwd(),'dist/**/*.entity.js']],
+        entities: [join(process.cwd(),'dist/**/*.entity.js')],
         synchronize: true,
         autoLoadEntities: true,
       })
