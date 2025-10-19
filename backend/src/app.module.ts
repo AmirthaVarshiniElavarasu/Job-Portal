@@ -13,15 +13,11 @@ import { JobPortalModule } from './job_portal/job_portal.module';
       imports:[ConfigModule],
       inject:[ConfigService],
       useFactory: async (configService: ConfigService)=> ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_NAME'),
-        entities: [join(process.cwd(),'dist/**/*.entity.js')],
-        synchronize: true,
+        url: configService.get('DATABASE_URL'),
+        ssl: { rejectUnauthorized: false }, // ✅ Required for Render DB
         autoLoadEntities: true,
+        synchronize: true, // keep true for your internship project
+        entities: [join(process.cwd(), 'dist/**/*.entity.js')],
       })
     }),
     JobPortalModule,
