@@ -6,17 +6,19 @@ import JobList from './components/JobList';
 import CreateJobModal from './components/CreateJobModal';
 
 export default function Home() {
-  const [filters, setFilters] = useState({});
+  const [jobs, setJobs] = useState([]); // ✅ store job results, not filters
   const [opened, setOpened] = useState(false);
-  const handleFilter = (f) => {
-    setFilters(f);
+
+  const handleFilterResults = (data) => {
+    console.log('🎯 Received jobs:', data);
+    setJobs(data); // ✅ store job results here
   };
 
   return (
     <>
       <NavBar onCreateJobClick={() => setOpened(true)} />
-      <SearchBar onFilter={handleFilter} />
-      <JobList filters={filters} />
+      <SearchBar onFilter={handleFilterResults} /> {/* ✅ passes callback */}
+      <JobList jobs={jobs} /> {/* ✅ pass jobs, not filters */}
       <CreateJobModal opened={opened} onClose={() => setOpened(false)} />
     </>
   );

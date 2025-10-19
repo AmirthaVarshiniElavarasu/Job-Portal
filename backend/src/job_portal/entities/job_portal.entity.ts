@@ -8,7 +8,7 @@ export class JobPortal {
   @Column({ type: 'text', nullable: false })
   title: string;
 
-  @Column({ type: 'text', nullable: false, unique: true })
+  @Column({ type: 'text', nullable: false})
   companyName: string;
 
   @Column({ type: 'text', nullable: false })

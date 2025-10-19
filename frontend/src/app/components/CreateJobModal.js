@@ -124,6 +124,7 @@ export default function CreateJobModal({ opened, onClose }) {
               rightSection={<IconChevronDown size={16} />}
               comboboxProps={{ withinPortal: false }}
               radius="md"
+              
             />
           </Grid.Col>
 
@@ -162,7 +163,7 @@ export default function CreateJobModal({ opened, onClose }) {
           </Grid.Col>
 
           <Grid.Col span={6}>
-            <div style={{ position: 'relative', zIndex: 3000 }}>
+            <div style={{ position: 'relative'}}>
               <DatePickerInput
                 label="Application Deadline"
                 value={form.deadline}
@@ -171,7 +172,6 @@ export default function CreateJobModal({ opened, onClose }) {
                 popoverProps={{
                   withinPortal: false,
                   position: 'bottom-start',
-                  zIndex: 4000,
                 }}
                 radius="md"
               />

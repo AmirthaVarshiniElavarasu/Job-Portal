@@ -2,10 +2,11 @@
 import { useEffect, useState } from 'react';
 import { Card, Text, Badge, Group, Button, Grid, Loader } from '@mantine/core';
 
-export default function JobList() {
+export default function JobList({ jobs: filteredJobs = [] }) {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Load all jobs initially
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -21,7 +22,28 @@ export default function JobList() {
     fetchJobs();
   }, []);
 
-  if (loading) return <Loader size="xl" variant="bars" style={{ margin: '2rem auto', display: 'block' }} />;
+  // ✅ Update jobs when SearchBar sends filtered results
+  useEffect(() => {
+    if (filteredJobs && filteredJobs.length >= 0) {
+      setJobs(filteredJobs);
+    }
+  }, [filteredJobs]);
+
+  if (loading)
+    return (
+      <Loader
+        size="xl"
+        variant="bars"
+        style={{ margin: '2rem auto', display: 'block' }}
+      />
+    );
+
+  if (!jobs.length)
+    return (
+      <Text ta="center" mt="xl" c="dimmed">
+        No jobs found
+      </Text>
+    );
 
   return (
     <Grid gutter="lg" p="md">
