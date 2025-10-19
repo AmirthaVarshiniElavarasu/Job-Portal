@@ -79,10 +79,10 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
         handleAutoSearch(); // Initial job load
       } catch (err) {
         console.error('Error loading salary range:', err);
-        setSalaryRange([10000, 200000]);
+        setSalaryRange([100000, 200000]);
         setFilters((prev) => ({
           ...prev,
-          salaryRange: [10000, 200000],
+          salaryRange: [100000, 200000],
         }));
         handleAutoSearch();
       }
