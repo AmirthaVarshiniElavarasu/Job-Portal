@@ -34,4 +34,6 @@ export class CreateJobPortalDto {
 
   @IsEnum(['Draft', 'Published'])
   status: string;
+
+  
 }

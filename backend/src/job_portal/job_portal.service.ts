@@ -1,23 +1,41 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JobPortal } from './entities/job_portal.entity';
 import { CreateJobPortalDto } from './dto/create-job_portal.dto';
 import { UpdateJobPortalDto } from './dto/update-job_portal.dto';
+import {
+  differenceInMinutes,
+  differenceInHours,
+  differenceInDays,
+  formatDistanceToNow,
+} from 'date-fns';
 
 @Injectable()
 export class JobPortalService {
   constructor(
     @InjectRepository(JobPortal)
     private readonly jobRepository: Repository<JobPortal>,
-  ) { }
+  ) {}
 
-  // ✅ CREATE a new job
+  // Helper function to calculate "time ago"
+  private getTimeAgo(createdAt: Date): string {
+  
+    return formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  }
+
+  // CREATE a new job
   async create(createJobPortalDto: CreateJobPortalDto) {
     const { minSalary, maxSalary } = createJobPortalDto;
 
     if (minSalary >= maxSalary) {
-      throw new BadRequestException('Minimum salary must be less than maximum salary');
+      throw new BadRequestException(
+        'Minimum salary must be less than maximum salary',
+      );
     }
 
     const job = this.jobRepository.create(createJobPortalDto);
@@ -29,19 +47,24 @@ export class JobPortalService {
     };
   }
 
-  // ✅ GET all jobs
+  // GET all jobs
   async findAll() {
     const jobs = await this.jobRepository.find({
       order: { id: 'DESC' },
     });
 
+    const jobsWithTimeAgo = jobs.map((job) => ({
+      ...job,
+      timeAgo: this.getTimeAgo(job.createdAt),
+    }));
+
     return {
       message: 'All jobs fetched successfully',
-      data: jobs,
+      data: jobsWithTimeAgo,
     };
   }
 
-  // ✅ GET one job by ID
+  // GET one job by ID
   async findOne(id: number) {
     const job = await this.jobRepository.findOneBy({ id });
 
@@ -51,11 +74,14 @@ export class JobPortalService {
 
     return {
       message: 'Job fetched successfully',
-      data: job,
+      data: {
+        ...job,
+        timeAgo: this.getTimeAgo(job.createdAt),
+      },
     };
   }
 
-  // ✅ UPDATE job
+  // UPDATE job
   async update(id: number, updateJobPortalDto: UpdateJobPortalDto) {
     const job = await this.jobRepository.findOneBy({ id });
 
@@ -68,7 +94,9 @@ export class JobPortalService {
       updateJobPortalDto.maxSalary !== undefined &&
       updateJobPortalDto.minSalary >= updateJobPortalDto.maxSalary
     ) {
-      throw new BadRequestException('Minimum salary must be less than maximum salary');
+      throw new BadRequestException(
+        'Minimum salary must be less than maximum salary',
+      );
     }
 
     Object.assign(job, updateJobPortalDto);
@@ -80,20 +108,25 @@ export class JobPortalService {
     };
   }
 
-  // ✅ GET published jobs
+  // GET published jobs
   async findPublished() {
     const jobs = await this.jobRepository.find({
       where: { status: 'Published' },
       order: { id: 'DESC' },
     });
 
+    const jobsWithTimeAgo = jobs.map((job) => ({
+      ...job,
+      timeAgo: this.getTimeAgo(job.createdAt),
+    }));
+
     return {
       message: 'Published jobs fetched successfully',
-      data: jobs,
+      data: jobsWithTimeAgo,
     };
   }
 
-  // ✅ DELETE job
+  // DELETE job
   async remove(id: number) {
     const job = await this.jobRepository.findOneBy({ id });
 
@@ -109,86 +142,94 @@ export class JobPortalService {
     };
   }
 
-// ✅ SEARCH jobs by title, location, jobType, and salary range
-async search(query: {
-  title?: string;
-  location?: string;
-  jobType?: string;
-  minSalary?: number;
-  maxSalary?: number;
-}) {
-  const qb = this.jobRepository.createQueryBuilder('job');
+  // SEARCH jobs by title, location, jobType, and salary range
+  async search(query: {
+    title?: string;
+    location?: string;
+    jobType?: string;
+    minSalary?: number;
+    maxSalary?: number;
+  }) {
+    const qb = this.jobRepository.createQueryBuilder('job');
 
-  // Normalize and sanitize all inputs
-  const title = (query.title && query.title.trim().toLowerCase()) || '';
-  const location = (query.location && query.location.trim().toLowerCase()) || '';
-  const jobType = (query.jobType && query.jobType.trim().toLowerCase()) || '';
-  const minSalary = query.minSalary ? Number(query.minSalary) : undefined;
-  const maxSalary = query.maxSalary ? Number(query.maxSalary) : undefined;
+    const title = (query.title && query.title.trim().toLowerCase()) || '';
+    const location = (query.location && query.location.trim().toLowerCase()) || '';
+    const jobType = (query.jobType && query.jobType.trim().toLowerCase()) || '';
+    const minSalary = query.minSalary ? Number(query.minSalary) : undefined;
+    const maxSalary = query.maxSalary ? Number(query.maxSalary) : undefined;
 
-  // ✅ Detect whether the request has any valid filter key/value
-  const hasAnyFilter =
-    (title && title !== '') ||
-    (location && location !== '') ||
-    (jobType && jobType !== '') ||
-    minSalary !== undefined ||
-    maxSalary !== undefined;
+    const hasAnyFilter =
+      (title && title !== '') ||
+      (location && location !== '') ||
+      (jobType && jobType !== '') ||
+      minSalary !== undefined ||
+      maxSalary !== undefined;
 
-  // 🧠 CASE 1: No valid filters at all → return all jobs
-  if (!hasAnyFilter) {
-    const allJobs = await this.jobRepository.find({ order: { id: 'DESC' } });
+    if (!hasAnyFilter) {
+      const allJobs = await this.jobRepository.find({ order: { id: 'DESC' } });
+
+      const jobsWithTimeAgo = allJobs.map((job) => ({
+        ...job,
+        timeAgo: this.getTimeAgo(job.createdAt),
+      }));
+
+      return {
+        message: 'All jobs fetched successfully (no filters applied)',
+        count: jobsWithTimeAgo.length,
+        data: jobsWithTimeAgo,
+      };
+    }
+
+    if (title) {
+      qb.andWhere('LOWER(job.title) LIKE :title', { title: `%${title}%` });
+    }
+
+    if (location) {
+      qb.andWhere('LOWER(job.location) LIKE :location', {
+        location: `%${location}%`,
+      });
+    }
+
+    if (jobType) {
+      qb.andWhere('LOWER(job.jobType) LIKE :jobType', {
+        jobType: `%${jobType}%`,
+      });
+    }
+
+    if (minSalary !== undefined && maxSalary !== undefined) {
+      qb.andWhere('(job.minSalary >= :minSalary AND job.maxSalary <= :maxSalary)', {
+        minSalary,
+        maxSalary,
+      });
+    } else if (minSalary !== undefined) {
+      qb.andWhere('job.minSalary >= :minSalary', { minSalary });
+    } else if (maxSalary !== undefined) {
+      qb.andWhere('job.maxSalary <= :maxSalary', { maxSalary });
+    }
+
+    const results = await qb.orderBy('job.id', 'DESC').getMany();
+
+    if (results.length === 0) {
+      return {
+        message: 'No matching jobs found',
+        count: 0,
+        data: [],
+      };
+    }
+
+    const resultsWithTimeAgo = results.map((job) => ({
+      ...job,
+      timeAgo: this.getTimeAgo(job.createdAt),
+    }));
+
     return {
-      message: 'All jobs fetched successfully (no filters applied)',
-      count: allJobs.length,
-      data: allJobs,
+      message: 'Filtered jobs fetched successfully',
+      count: resultsWithTimeAgo.length,
+      data: resultsWithTimeAgo,
     };
   }
 
-  // 🧩 CASE 2: Apply filters that exist
-  if (title) {
-    qb.andWhere('LOWER(job.title) LIKE :title', { title: `%${title}%` });
-  }
-
-  if (location) {
-    qb.andWhere('LOWER(job.location) LIKE :location', { location: `%${location}%` });
-  }
-
-  if (jobType) {
-    qb.andWhere('LOWER(job.jobType) LIKE :jobType', { jobType: `%${jobType}%` });
-  }
-
-  if (minSalary !== undefined && maxSalary !== undefined) {
-    qb.andWhere('(job.minSalary >= :minSalary AND job.maxSalary <= :maxSalary)', {
-      minSalary,
-      maxSalary,
-    });
-  } else if (minSalary !== undefined) {
-    qb.andWhere('job.minSalary >= :minSalary', { minSalary });
-  } else if (maxSalary !== undefined) {
-    qb.andWhere('job.maxSalary <= :maxSalary', { maxSalary });
-  }
-
-  const results = await qb.orderBy('job.id', 'DESC').getMany();
-
-  // 🧠 CASE 3: No matches found
-  if (results.length === 0) {
-    return {
-      message: 'No matching jobs found',
-      count: 0,
-      data: [],
-    };
-  }
-
-  // ✅ CASE 4: Matches found
-  return {
-    message: 'Filtered jobs fetched successfully',
-    count: results.length,
-    data: results,
-  };
-}
-
-
-  // ✅ GET salary range (for slider)
+  // GET salary range (for slider)
   async getSalaryRange() {
     const qb = this.jobRepository
       .createQueryBuilder('job')

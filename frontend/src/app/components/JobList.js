@@ -123,10 +123,10 @@ export default function JobList({ jobs: filteredJobs = [] }) {
                 left: 12,
                 // boxShadow: '0px .5px 12px rgba(0, 0, 0, 0.5)',
                 background: 'transparent',
-                radius:'10px'
+                radius: '10px'
               }}
             >
-              <CompanyLogo  companyName={job.companyName} size={60} />
+              <CompanyLogo companyName={job.companyName} size={60} />
             </div>
 
             {/* -------- Badge (Top-Right Corner) -------- */}
@@ -147,7 +147,7 @@ export default function JobList({ jobs: filteredJobs = [] }) {
               variant="light"
               radius={10}
             >
-              24h Ago
+              {job.timeAgo ? job.timeAgo.replace(/^about /, '') : 'Just now'}
             </Badge>
 
             {/* -------- Job Title + Details -------- */}

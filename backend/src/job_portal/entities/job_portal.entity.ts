@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, } from 'typeorm';
 
 @Entity({ name: 'jobs' })
 export class JobPortal {
@@ -31,4 +31,7 @@ export class JobPortal {
 
   @Column({ type: 'enum', enum: ['Draft', 'Published'] ,default: 'Draft'})
   status: string;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }
