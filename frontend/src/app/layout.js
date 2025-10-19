@@ -1,23 +1,16 @@
-import "./globals.css";
-import { Geist, Geist_Mono } from "next/font/google";
-import ClientProviders from "./ClientProviders";
-
-
-
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+import '@mantine/core/styles.css';
+import './globals.css';
+import ClientProviders from './ClientProviders';
 
 export const metadata = {
-  title: "Job Portal",
+  title: 'Job Portal',
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <ClientProviders>
-          {children}
-          </ClientProviders>
+      <body>
+        <ClientProviders>{children}</ClientProviders>
       </body>
     </html>
   );

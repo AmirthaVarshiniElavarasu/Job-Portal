@@ -7,7 +7,9 @@ import '@mantine/dates/styles.css';
 
 export default function ClientProviders({ children }) {
   return (
-    <MantineProvider withGlobalStyles withNormalizeCSS>
+    <MantineProvider withGlobalStyles withNormalizeCSS theme={{
+        fontFamily: 'Satoshi, sans-serif',
+      }}>
       <DatesProvider settings={{ locale: 'en' }}>
         {children}
       </DatesProvider>
