@@ -71,7 +71,7 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
         );
         const { minSalary, maxSalary } = response.data.data;
 
-        const min = Number(minSalary) || 10000;
+        const min = Number(minSalary) || 100000;
         const max = Number(maxSalary) || 200000;
 
         setSalaryRange([min, max]);
