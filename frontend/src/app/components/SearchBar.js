@@ -8,6 +8,7 @@ import {
   RangeSlider,
   Box,
   Text,
+  useMantineTheme,
 } from '@mantine/core';
 import { IconSearch, IconMapPin, IconBriefcase } from '@tabler/icons-react';
 
@@ -102,10 +103,10 @@ export default function SearchBar({ onFilter }) {
 
   const [min, max] = salaryRange;
   if (isNaN(min) || isNaN(max)) return null;
-
+  const theme = useMantineTheme();
   return (
     <Box
-      maw={1400}
+      maw={1800}
       mx="auto"
       mt="lg"
       p="md"
@@ -121,9 +122,9 @@ export default function SearchBar({ onFilter }) {
         justify="center"
         wrap="nowrap"
         gap="md"
-        style={{ width: '100%', alignItems: 'center' }}
+        style={{ width: '90%', alignItems: 'center' }}
       >
-        {/* 🔍 Job Title */}
+        
         <TextInput
           variant="unstyled"
           placeholder="Search by Job Title, Role"
@@ -134,8 +135,15 @@ export default function SearchBar({ onFilter }) {
           size="md"
           style={{ flex: 1 }}
         />
-
-        {/* 📍 Location */}
+        <Box
+      style={{
+        width: '0px',
+        height: '48px',
+        borderLeft: `2px solid ${theme.colors.gray[5]}`, 
+        opacity: 0.7, 
+        margin: '0 10px',
+      }}
+    />
         <Select
           variant="unstyled"
           placeholder="Preferred Location"
@@ -147,7 +155,15 @@ export default function SearchBar({ onFilter }) {
           size="md"
           style={{ flex: 1 }}
         />
-
+       <Box
+      style={{
+        width: '0px',
+        height: '48px',
+        borderLeft: `2px solid ${theme.colors.gray[5]}`, 
+        opacity: 0.7, 
+        margin: '0 10px',
+      }}
+    />
         {/* 💼 Job Type */}
         <Select
           variant="unstyled"
@@ -161,7 +177,15 @@ export default function SearchBar({ onFilter }) {
           style={{ flex: 1 }}
         />
 
-        {/* 💰 Salary Range */}
+       <Box
+      style={{
+        width: '0px',
+        height: '48px',
+        borderLeft: `2px solid ${theme.colors.gray[5]}`, 
+        opacity: 0.7, 
+        margin: '0 10px',
+      }}
+    />
         <div>
           <Text size="sm" fw={500} mb={4}>
             Salary Per Month ₹{formatSalary(filters.salaryRange[0])} – ₹{formatSalary(filters.salaryRange[1])}
