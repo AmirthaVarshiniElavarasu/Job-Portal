@@ -28,7 +28,7 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
   });
   const [salaryRange, setSalaryRange] = useState([0, 0]);
 
-  /* 🧮 Format salary display */
+  /* Format salary display */
   const formatSalary = (value) => {
     if (!value || isNaN(value)) return '0';
     if (value >= 100000) return `${(value / 100000).toFixed(1)}L`;
@@ -36,7 +36,8 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
     return value.toString();
   };
 
-  /* 🔍 Handle auto-search */
+
+  /* Handle auto-search */
   const handleAutoSearch = async () => {
     try {
       const params = {
@@ -47,7 +48,7 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
         maxSalary: filters.salaryRange[1] || '',
       };
 
-      console.log('🔍 Searching with:', params);
+      console.log('Searching with:', params);
 
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/jobs/search`,
@@ -61,7 +62,7 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
     }
   };
 
-  /* ⚙️ Fetch salary range on mount */
+  /* Fetch salary range on mount */
   useEffect(() => {
     const fetchSalaryRange = async () => {
       try {
@@ -90,7 +91,7 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
     fetchSalaryRange();
   }, []);
 
-  /* 🔁 Debounced search updates */
+  /*  Debounced search updates */
   useEffect(() => {
     const debounce = setTimeout(() => {
       handleAutoSearch();
@@ -142,27 +143,22 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
               h={50}
               radius="md"
             />
-            <Button styles={{
-              inner: {
-                fontWeight: 'bold',
-
-              },
-            }} size="lg" variant="subtle" c="#333" fw={500} fz="sm">
+            <Button className='navbar_button'>
               Home
             </Button>
-            <Button size="lg" variant="subtle" c="#333" fw={500} fz="sm">
+            <Button className='navbar_button'>
               Find Jobs
             </Button>
-            <Button size="lg" variant="subtle" c="#333" fw={500} fz="sm">
+            <Button className='navbar_button' >
               Find Talents
             </Button>
-            <Button size="lg" variant="subtle" c="#333" fw={500} fz="sm">
+            <Button className='navbar_button'>
               About Us
             </Button>
-            <Button size="lg" variant="subtle" c="#333" fw={500} fz="sm">
+            <Button className='navbar_button'>
               Testimonials
             </Button>
-            <Button
+            <Button className='create-job'
               radius={30}
               fw={600}
               fz="sm"
@@ -186,6 +182,7 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
         mt="lg"
         p="md"
         style={{
+
           height: '80px',
           backgroundColor: '#fff',
           display: 'flex',
@@ -204,7 +201,7 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
           {/* Job Title Search */}
           <TextInput
             variant="unstyled"
-            placeholder="Search by Job Title, Role"
+            placeholder="  Search by Job Title, Role"
             leftSection={<IconSearch size={20} />}
             value={filters.title}
             onChange={(e) =>
@@ -212,6 +209,7 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
             }
             radius="xl"
             size="md"
+            fw={500}
             style={{ flex: 1 }}
           />
 
@@ -228,7 +226,7 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
           {/* Location */}
           <Select
             variant="unstyled"
-            placeholder=" Preferred Location"
+            placeholder="  Preferred Location"
             data={[
               'Chennai',
               'Bangalore',
@@ -246,6 +244,7 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
             }
             radius="xl"
             size="md"
+            fw={500}
             style={{ flex: 1 }}
           />
 
@@ -262,10 +261,10 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
           {/* Job Type */}
           <Select
             variant="unstyled"
-            placeholder=" Job Type"
+            placeholder="   Job Type"
             data={['Full-time', 'Part-time', 'Contract', 'Internship']}
             leftSection={<svg width="18" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M13 17C13 14.7909 10.3137 13 7 13C3.68629 13 1 14.7909 1 17M14.8281 3.17188C15.1996 3.54331 15.4942 3.98427 15.6952 4.46957C15.8962 4.95487 15.9999 5.47533 15.9999 6.00062C15.9999 6.52591 15.8963 7.04497 15.6953 7.53027C15.4943 8.01558 15.1996 8.45705 14.8281 8.82848M17 1C17.6566 1.65661 18.1775 2.43612 18.5328 3.29402C18.8882 4.15192 19.0718 5.07127 19.0718 5.99985C19.0718 6.92844 18.8886 7.84815 18.5332 8.70605C18.1778 9.56396 17.6566 10.3435 17 11.0001M7 10C4.79086 10 3 8.20914 3 6C3 3.79086 4.79086 2 7 2C9.20914 2 11 3.79086 11 6C11 8.20914 9.20914 10 7 10Z" stroke="#686868" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M13 17C13 14.7909 10.3137 13 7 13C3.68629 13 1 14.7909 1 17M14.8281 3.17188C15.1996 3.54331 15.4942 3.98427 15.6952 4.46957C15.8962 4.95487 15.9999 5.47533 15.9999 6.00062C15.9999 6.52591 15.8963 7.04497 15.6953 7.53027C15.4943 8.01558 15.1996 8.45705 14.8281 8.82848M17 1C17.6566 1.65661 18.1775 2.43612 18.5328 3.29402C18.8882 4.15192 19.0718 5.07127 19.0718 5.99985C19.0718 6.92844 18.8886 7.84815 18.5332 8.70605C18.1778 9.56396 17.6566 10.3435 17 11.0001M7 10C4.79086 10 3 8.20914 3 6C3 3.79086 4.79086 2 7 2C9.20914 2 11 3.79086 11 6C11 8.20914 9.20914 10 7 10Z" stroke="#686868" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             }
             value={filters.jobType}
@@ -274,7 +273,8 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
             }
             radius="xl"
             size="md"
-            style={{ flex: 1 }}
+            fw={500}
+            style={{ flex: 1, }}
           />
 
           {/* Divider */}
@@ -289,30 +289,40 @@ export default function Navbar({ onCreateJobClick, onFilter }) {
 
           {/* Salary Range */}
           <div style={{ flex: 1 }}>
-            <Text size="sm" fw={500} mb={4}>
-              Salary Per Month ₹
-              {formatSalary(filters.salaryRange[0])} – ₹
-              {formatSalary(filters.salaryRange[1])}
-            </Text>
+            <Group justify="space-between" mb={4}>
+              <Text size="lg" fw={600}>
+                Salary Per Month
+              </Text>
+              <Text fw={500} color="dimmed">
+                ₹{formatSalary(Math.round(filters.salaryRange[0] / 12))} – ₹
+                {formatSalary(Math.round(filters.salaryRange[1] / 12))}
+              </Text>
+            </Group>
 
             <RangeSlider
               min={min}
               max={max}
               step={1000}
               value={filters.salaryRange}
-              onChange={(value) =>
-                setFilters({ ...filters, salaryRange: value })
-              }
+              onChange={(value) => setFilters({ ...filters, salaryRange: value })}
               color="black"
               radius="xl"
               size="sm"
               showLabelOnHover={false}
               styles={{
-                bar: { height: 6 },
-                thumb: { width: 16, height: 16 },
+                root: { maxWidth: 320 }, // limits width for balance
+                track: { height: 3 },
+                bar: { height: 3 },
+                thumb: {
+                  width: 14,
+                  height: 14,
+                  border: '4px solid black',
+                  backgroundColor: '#fff',
+                },
               }}
             />
           </div>
+
         </Group>
       </Box>
     </Box>
